@@ -1,0 +1,10 @@
+--- a/drivers/usb/serial/option.c	2026-05-19 14:28:39.706768397 +0800
++++ b/drivers/usb/serial/option.c	2026-05-19 14:29:20.338081063 +0800
+@@ -646,6 +646,7 @@
+ 
+ 
+ static const struct usb_device_id option_ids[] = {
++	{ USB_DEVICE(0x05c6, 0x9025) },
+ 	{ USB_DEVICE(OPTION_VENDOR_ID, OPTION_PRODUCT_COLT) },
+ 	{ USB_DEVICE(OPTION_VENDOR_ID, OPTION_PRODUCT_RICOLA) },
+ 	{ USB_DEVICE(OPTION_VENDOR_ID, OPTION_PRODUCT_RICOLA_LIGHT) },
