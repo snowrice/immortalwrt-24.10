@@ -1,0 +1,7 @@
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+/etc/4g_signal_led_triple.sh &
+
+exit 0
+
