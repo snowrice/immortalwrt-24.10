@@ -1,0 +1,45 @@
+--- a/drivers/clk/ralink/clk-mt7621.c	2026-05-19 16:53:00.000000000 +0800
++++ b/drivers/clk/ralink/clk-mt7621.c	2026-05-19 23:09:25.627604005 +0800
+@@ -370,6 +370,42 @@
+ 		goto free_clk_priv;
+ 	}
+ 
++	regmap_update_bits(priv->memc, MEMC_REG_CPU_PLL, 0x7f0, 0x36 << 4);
++	for (i = 0; i < 10000; i++) __asm__ __volatile__("nop");
++	{
++		u32 clkcfg, clk_sel, curclk, ffiv, ffrac, val, pll, prediv, fbdiv;
++		unsigned long xtal_clk, cpu_clk;
++		static const u32 prediv_tbl[] = { 0, 1, 2, 2 };
++
++		regmap_read(priv->sysc, SYSC_REG_SYSTEM_CONFIG0, &val);
++		val = FIELD_GET(XTAL_MODE_SEL_MASK, val);
++		if (val <= 2)
++			xtal_clk = 20000000;
++		else if (val <= 5)
++			xtal_clk = 40000000;
++		else
++			xtal_clk = 25000000;
++
++		regmap_read(priv->sysc, SYSC_REG_CLKCFG0, &clkcfg);
++		clk_sel = FIELD_GET(CPU_CLK_SEL_MASK, clkcfg);
++		regmap_read(priv->sysc, SYSC_REG_CUR_CLK_STS, &curclk);
++		ffiv = FIELD_GET(CUR_CPU_FDIV_MASK, curclk);
++		ffrac = FIELD_GET(CUR_CPU_FFRAC_MASK, curclk);
++
++		if (clk_sel == 1) {
++			regmap_read(priv->memc, MEMC_REG_CPU_PLL, &pll);
++			fbdiv = FIELD_GET(CPU_PLL_FBDIV_MASK, pll);
++			prediv = FIELD_GET(CPU_PLL_PREDIV_MASK, pll);
++			cpu_clk = ((fbdiv + 1) * xtal_clk) >> prediv_tbl[prediv];
++		} else if (clk_sel == 0) {
++			cpu_clk = 500000000;
++		} else {
++			cpu_clk = xtal_clk;
++		}
++		cpu_clk = cpu_clk / ffiv * ffrac;
++		pr_info("MT7621: Hardware PLL and CCF Clock-Tree successfully synchronized to %luMHz!\n", cpu_clk / 1000000);
++	}
++
+ 	count = ARRAY_SIZE(mt7621_clks_base) +
+ 		ARRAY_SIZE(mt7621_fixed_clks) + ARRAY_SIZE(mt7621_gates);
+ 	clk_data = kzalloc(struct_size(clk_data, hws, count), GFP_KERNEL);
