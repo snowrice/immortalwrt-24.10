@@ -2889,16 +2889,16 @@ define Device/tplink_mr600-v2-eu
   $(Device/tplink-v2)
   DEVICE_MODEL := MR600
   DEVICE_VARIANT := v2 (EU)
-  TPLINK_FLASHLAYOUT := 16Mltq
+  TPLINK_FLASHLAYOUT := 32Mltq
   DEVICE_PACKAGES := kmod-mt7603 kmod-mt7615e kmod-mt7663-firmware-ap \
-		kmod-usb-net-qmi-wwan uqmi kmod-usb3 -uboot-envtools
+		kmod-usb-net-qmi-wwan luci-proto-uqmi kmod-usb3 -uboot-envtools
   IMAGE/factory.bin := tplink-v2-image -e -a 0x10000
   IMAGE/sysupgrade.bin := tplink-v2-image -s -e -a 0x10000 | check-size | \
 	append-metadata
   KERNEL := $(KERNEL_DTB) | uImage lzma
   KERNEL_INITRAMFS := $$(KERNEL) | tplink-v2-header
   TPLINK_BOARD_ID := MR600-V2-EU
-  IMAGE_SIZE := 16384k
+  IMAGE_SIZE := 32640k
 endef
 TARGET_DEVICES += tplink_mr600-v2-eu
 
