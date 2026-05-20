@@ -109,12 +109,12 @@
 				compatible = "openwrt,uimage";
 				openwrt,offset = <512>; /* account for the 512-byte long header */
 				label = "firmware";
-				reg = <0x20000 0xfa0000>;
+				reg = <0x20000 0x1fa0000>;
 			};
 
-			partition@fc0000 {
+			partition@1fc0000 {
 				label = "romfile";
-				reg = <0xfc0000 0x10000>;
+				reg = <0x1fc0000 0x10000>;
 				read-only;
 
 				nvmem-layout {
@@ -130,9 +130,9 @@
 				};
 			};
 
-			partition@fd0000 {
+			partition@1fd0000 {
 				label = "config";
-				reg = <0xfd0000 0x10000>;
+				reg = <0x1fd0000 0x10000>;
 				read-only;
 			};
 
@@ -148,14 +148,14 @@
 			 *
 			 * Manual inspection shows 0xfe0000 is empty (0xff) bytes. 0xff0000 contains
 			 * the data we want. */
-			partition@fe0000 {
+			partition@1fe0000 {
 				label = "filler";
-				reg = <0xfe0000 0x10000>;
+				reg = <0x1fe0000 0x10000>;
 			};
 
-			partition@ff0000 {
+			partition@1ff0000 {
 				label = "radio";
-				reg = <0xff0000 0x10000>;
+				reg = <0x1ff0000 0x10000>;
 				read-only;
 
 				nvmem-layout {
